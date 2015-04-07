@@ -1,0 +1,14 @@
+{% set php = salt['grains.filter_by']({
+    'Amazon': {
+        'package': 'php55',
+        'pear_package': 'php-pear',
+        'config': '/etc/php-5.5.ini',
+        'conf_dir': '/etc/php-5.5.d',
+        'fpm_conf': '/etc/php-fpm-5.5.conf',
+        'fpm_package': 'php55-fpm',
+        'fpm_d_dir': '/etc/php-fpm-5.5.d',
+        'fpm_service': 'php-fpm-5.5',
+        'apache24_module': '10-php.conf',
+        'apache24_conf': 'php.conf',
+    },
+}, merge=salt['pillar.get']('php:lookup'), default='Amazon', grain='os') %}

@@ -1,0 +1,26 @@
+{%- macro render(config, config_type='settings') %}
+  {%- if config is mapping %}
+    {%- for config_type, subconfig in config.items() %}
+{{ render(subconfig, config_type) }}
+    {%- endfor %}
+  {% else %}
+    {%- for config_item in config %}
+      {%- set config_name = config_item.keys()[0] %}
+      {%- set config_value = config_item.values()[0] %}
+      {%- if config_value is string or config_value is number %}
+        {%- if config_type == 'settings' %}
+{{ config_name }}={{ config_value }}
+        {%- else %}
+{{ config_type }}[{{ config_name }}]={{ config_value }}
+        {%- endif %}
+      {%- elif config_value is iterable %}
+
+; Begin {{ config_name }}
+{{ '[{0}]'.format(config_name) -}}
+    {{ render(config_value)|indent }}
+; End {{ config_name }}{{ '\n' }}
+      {%- endif %}
+    {%- endfor %}
+  {% endif %}
+{%- endmacro %}
+{{ render(config) }}
